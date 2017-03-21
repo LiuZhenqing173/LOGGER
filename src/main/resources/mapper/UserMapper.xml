@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.demo.logger.dao.UserDao">
+
+    <select id="login" resultType="User">
+        select user_id, user_name, nickname, status, create_time from user_info where user_name = #{username} and password = #{password} and status = 0 and is_admin = 1
+    </select>
+
+	<select id="getUserList" resultType="User">
+		select user_id, user_name, nickname, status, create_time from user_info where is_admin != 1
+	</select>
+
+	<select id="exist" resultType="Integer">
+		select count(1) from user_info where user_name = #{name}
+	</select>
+
+	<insert id="add" keyProperty="user_id" parameterType="User">
+		insert into user_info (user_name, nickname, password, status, is_admin, create_time)
+		values (#{userName}, #{nickname}, #{password}, #{status}, #{isAdmin}, #{createTime})
+	</insert>
+
+	<update id="delete">
+		update user_info set status = 1 where user_id in 
+		<foreach collection="array" index="index" item="ids" open="(" separator="," close=")">
+			#{ids}
+		</foreach>
+	</update>
+
+</mapper>
